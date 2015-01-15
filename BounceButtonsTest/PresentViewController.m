@@ -10,8 +10,8 @@
 #define CHTumblrMenuViewTag 1999
 #define CHTumblrMenuViewImageHeight 40
 #define CHTumblrMenuViewTitleHeight 20
-#define CHTumblrMenuViewVerticalPadding 10
-#define CHTumblrMenuViewHorizontalMargin 10
+#define CHTumblrMenuViewVerticalPadding 50
+#define CHTumblrMenuViewHorizontalMargin 50
 #define CHTumblrMenuViewRriseAnimationID @"CHTumblrMenuViewRriseAnimationID"
 #define CHTumblrMenuViewDismissAnimationID @"CHTumblrMenuViewDismissAnimationID"
 #define CHTumblrMenuViewAnimationTime 0.36
@@ -44,12 +44,11 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
     buttonArray = [[NSMutableArray alloc]initWithCapacity:0];
-    NSArray *imageList = @[[UIImage imageNamed:@"menuChat.png"], [UIImage imageNamed:@"menuUsers.png"], [UIImage imageNamed:@"menuMap.png"], [UIImage imageNamed:@"menuClose.png"],[UIImage imageNamed:@"menuChat.png"],[UIImage imageNamed:@"menuMap.png"]];
+     NSArray *imageList = @[[UIImage imageNamed:@"post_type_bubble_facebook"], [UIImage imageNamed:@"post_type_bubble_flickr"], [UIImage imageNamed:@"post_type_bubble_googleplus"], [UIImage imageNamed:@"post_type_bubble_instagram"],[UIImage imageNamed:@"post_type_bubble_twitter"],[UIImage imageNamed:@"post_type_bubble_youtube"]];
     for ( int i = 0; i<6; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button setBackgroundImage:[imageList objectAtIndex:i] forState:UIControlStateNormal];
-        button.frame = CGRectMake(20+ (80 * i), self.view.bounds.size.height , 40, 40);
-//        button.frame = [self frameForButtonAtIndex:i];
+        button.frame = CGRectMake(20+ (80 * i), self.view.bounds.size.height , 50, 50);
         button.tag = 200 + i;
         [button addTarget:self action:@selector(onMenuButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [buttonArray addObject:button];
@@ -196,8 +195,20 @@
 
 - (void)onMenuButtonClick:(UIButton *)sender
 {
-    [self dropAnimation];
-//    [self dismissViewControllerAnimated:YES completion:nil];
+    UIView * view = (UIView *)sender;
+    [UIView animateWithDuration:0.25 animations:^{
+        view.transform = CGAffineTransformMakeScale(1.5, 1.5);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.25 animations:^{
+            view.transform = CGAffineTransformIdentity;
+        }];
+        
+    }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self dropAnimation];
+    });
+    
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -205,15 +216,5 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
